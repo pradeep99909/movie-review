@@ -7,11 +7,9 @@ import CreateBrowserHistory from "history";
 
 class App extends React.Component {
   render() {
-    // fetch("https://api.themoviedb.org/3/movie/76341?api_key=67da789cca6db17365f6961b7fd6c59d").then(
-    //   json=>json.json().then(
-    //     data=>console.log(data)
-    //   )
-    // )
+    // fetch(
+    //   "https://api.themoviedb.org/3/movie/76341?api_key=67da789cca6db17365f6961b7fd6c59d"
+    // ).then(json => json.json().then(data => console.log(data)));
     return (
       <BrowserRouter history={CreateBrowserHistory}>
         <div className="App">

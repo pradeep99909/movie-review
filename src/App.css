@@ -73,15 +73,53 @@
 .home {
   width: 100%;
   height: calc(100% - 60px);
+  display: flex;
+  flex: 1;
+  flex-direction: column;
 }
 
 .home .home-header {
   width: 100%;
-  padding: 10px 0px;
+  padding: 20px 0px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }
 
-.home .home-header input {
+.home .home-header input,
+.home .home-header select {
   padding: 0px 10px;
+  margin: 10px 10px;
+  height: 30px;
+}
+
+.home-header input {
+  width: 150px;
+  background-color: #121212;
+  border-radius: 5px;
+  color: white;
+  border: none;
+  outline: none;
+}
+
+.movies {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.movies h1 {
+  color: white;
+  font-family: sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  padding-left: 20px;
+}
+
+.movies .movies_list {
+  color: white;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 }
