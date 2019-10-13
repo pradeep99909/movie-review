@@ -50,13 +50,8 @@ class Home extends React.Component {
                 method: "get"
               }
             ).then(file =>
-              file
-                .json()
-                .then(data =>
-                  localStorage.setItem("movie-data", JSON.stringify(data))
-                )
+              file.json().then(data => data.map(d => <option value={d} />))
             )}
-            this.state.search_list.map(d => console.log(d))}
           </datalist>
         </div>
       </div>
