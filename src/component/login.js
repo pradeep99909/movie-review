@@ -29,7 +29,51 @@ class Login extends React.Component {
           alert(error.message);
         });
     }
-  };
+  }
+
+  google=()=>{
+    const {history}=this.props
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      var token = result.credential.accessToken;
+      // The signed-in user info.
+      var user = result.user;
+      history.push("/home")
+      // ...
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+    firebase.auth().getRedirectResult().then(function(result) {
+      if (result.credential) {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        var token = result.credential.accessToken;
+        // ...
+      }
+      // The signed-in user info.
+      var user = result.user;
+      
+    }).catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      console.log(error.message)
+      // The email of the user's account used.
+      var email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      var credential = error.credential;
+      // ...
+    });
+  }
+
+
   render() {
     return (
       <div className="login">
@@ -49,15 +93,8 @@ class Login extends React.Component {
               />
             </div>
             <button onClick={this.login}>Login</button>
-            <p style={{ fontSize: "14px" }}>
-              Not Registered?&nbsp;
-              <Link
-                style={{ color: "red", textDecoration: "none" }}
-                to="/register"
-              >
-                SignUp
-              </Link>
-            </p>
+            
+            <p onClick={this.google} style={{width:'200px',height:'40px',display:'flex',justifyContent:'center',alignItems:'center',backgroundColor:'#DB4437',fontWeight:'bold',cursor:'pointer'}}>Login using Google</p>
           </form>
         </div>
       </div>
