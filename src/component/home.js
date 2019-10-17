@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "./header";
 import $ from "jquery";
+import {withRouter} from 'react-router-dom'
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -8,43 +9,39 @@ class Home extends React.Component {
       query: "",
       search_list: null,
       movies: null,
+      genres:"",
       t: "Discover Movies"
     };
   }
-  UNSAFE_componentWillMount() {
-    $.ajax({
-      type: "GET",
-      dataType: "json",
-      cors: true,
-      contentType: "application/json",
-      //secure: true,
-      headers: {
-        "Access-Control-Allow-Origin": "*"
-      },
-      //contentType: "application/json;charset=UTF-8",
-      url:
-        "https://api.themoviedb.org/3/discover/movie?api_key=67da789cca6db17365f6961b7fd6c59d&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1",
-      success: function(response) {
-        response.header("Access-Control-Allow-Headers:'*'");
-        localStorage.setItem("movies", JSON.stringify(response.results));
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    }).done(
-      this.setState({
-        movies: JSON.parse(localStorage.getItem("movies"))
-      })
-    );
+  get_data=()=>{
+    fetch("https://api.themoviedb.org/3/discover/movie?api_key=67da789cca6db17365f6961b7fd6c59d&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1").then(
+                  response=>response.json().then(
+                    r=>this.setState({
+                      movies:r.results
+                    })
+                  )
+    )
   }
 
-  searchchange = e => {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
-  };
+  componentWillMount() {
+    this.get_data()
+  }
+  componentDidMount(){
+    this.get_data()
+  }
+  componentWillUnmount(){
+    this.get_data()
+  }
 
-  render() {
+
+  searchchange = e => {
+    const {value,name}=e.target
+    this.setState((prev)=>(
+      {
+      ...prev,
+      [name]: value,
+      t:'Search "'+value+'"'
+    }));
     if (this.state.query !== "") {
       $.ajax({
         mode: "no-cors",
@@ -53,79 +50,100 @@ class Home extends React.Component {
         url:
           "https://api.themoviedb.org/3/search/movie?query=" +
           this.state.query +
-          "&api_key=67da789cca6db17365f6961b7fd6c59d",
+          "&genre=Adventure&api_key=67da789cca6db17365f6961b7fd6c59d",
         success: function(response) {
           localStorage.setItem("search_list", JSON.stringify(response.results));
-          this.setState({
-            search_list: JSON.parse(localStorage.getItem("search_list"))
-          });
+          
         },
         error: function(error) {
           console.log(error);
         }
-      });
-      //console.log(JSON.parse(localStorage.getItem("search_list")));
+      }).done(
+        this.setState({
+          search_list: JSON.parse(localStorage.getItem("search_list")),
+          movies:null
+        })
+      )
+      console.log(JSON.parse(localStorage.getItem("search_list")));
     }
+    else{
+      this.get_data()
+      this.setState((prev)=>(
+        {
+          ...prev,
+          search_list:null,
+          t:"Discover Movies"
+        }
+      ))
+    }
+  };
 
-    const genres = [
-      "Romantic",
-      "Horror",
-      "Action",
-      "Fiction",
-      "Documentary",
-      "Thriller",
-      "Drama",
-      "Mystery"
-    ];
-    //console.log(this.state.movies);
+  movie=(e)=>{
+    this.props.history.push("/movie/"+e.target.dataset['id'])
+
+  }
+
+  render() {
     return (
       <div className="home">
         <Header />
         <div className="home-header">
-          <select placeholder="Genres" onChange={this.searchchange}>
-            {genres.map(d => (
-              <option value={d}>{d}</option>
-            ))}
-          </select>
-          <input
-            type="year"
-            min="1990"
-            max="2019"
-            placeholder="Starting from(Year)"
-          />
-          <input
-            type="year"
-            min="1990"
-            max="2019"
-            placeholder="Ended In(Year)"
-          />
           <input
             type="text"
             placeholder="Search.."
             name="query"
-            list="movie-list"
-            onChange={this.searchchange}
+            onKeyUp={this.searchchange}
             autoComplete="false"
           />
-          <datalist id="movie-list">
-            {this.state.search_list !== null
-              ? this.state.search_list.map(d => {
-                  console.log(d.title);
-                })
-              : null}
-            <option value="hello" />
-          </datalist>
         </div>
         <div className="movies">
           <h1>{this.state.t}</h1>
           <div className="movies_list">
-            {this.state.movies !== null
-              ? localStorage.getItem("movies").map(d => {
-                  <div id={d.key}>
-                    <img src="" />
-                  </div>;
-                })
-              : "Sorry Some Error has Happen"}
+            { this.state.movies !== null
+              ? this.state.movies.map(d => (
+                  <div className='movie-box' data-id={d.id} onClick={this.movie} id={d.key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original'+ d.poster_path+')'}}>
+                    <div className="movie-box-bottom">
+                    <h3>{d.title}</h3>
+                    <div><p>{d.release_date.slice(0,4)}</p>
+                    </div>
+                    <div>
+                    <i className="material-icons">star</i>
+                      <p style={{paddingLeft:'10px'}}>{
+                        d.vote_average
+                      }</p>
+                    </div>
+                    </div>
+                  </div>
+                  
+    ))
+              : (
+                this.state.search_list!==null?
+                this.state.search_list.slice(0, 11).map(d => (
+                  <div className='movie-box' data-id={d.id} onClick={this.movie} id={d.key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,1) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original/'+ d.poster_path+')'}}>
+                    <div className="movie-box-bottom">
+                    <h3>{d.title}</h3>
+                    <div><p>{d.release_date.slice(0,4)}</p>
+                    <div className="movie-genre">
+                    {
+                      d.genre_ids.map((d,key)=>{
+                        
+                        return <p></p>
+                      })
+                    }
+                    </div></div>
+                    <div>
+                    <i className="material-icons">star</i>
+                      <p style={{paddingLeft:'10px'}}>{
+                        d.vote_average
+                      }</p>
+                    </div>
+                    </div>
+                </div>
+                  
+    )):
+                null
+                )} 
+                
           </div>
         </div>
       </div>
@@ -133,4 +151,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default withRouter(Home);
