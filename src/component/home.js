@@ -103,12 +103,12 @@ class Home extends React.Component {
               ? this.state.movies.map(d => (
                   <div className='movie-box' data-id={d.id} onClick={this.movie} id={d.key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original'+ d.poster_path+')'}}>
                     <div className="movie-box-bottom">
-                    <h3>{d.title}</h3>
-                    <div><p>{d.release_date.slice(0,4)}</p>
+                    <h3 data-id={d.id}>{d.title}</h3>
+                    <div><p data-id={d.id}>{d.release_date.slice(0,4)}</p>
                     </div>
                     <div>
-                    <i className="material-icons">star</i>
-                      <p style={{paddingLeft:'10px'}}>{
+                    <i data-id={d.id} className="material-icons">star</i>
+                      <p data-id={d.id} style={{paddingLeft:'10px'}}>{
                         d.vote_average
                       }</p>
                     </div>
