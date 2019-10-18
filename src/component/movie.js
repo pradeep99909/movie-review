@@ -79,7 +79,8 @@ class MovieMain extends React.Component{
         this.state={
             movie:null,
             isLoaded:false,
-            genres:null
+            genres:null,
+            b:"Add to Bookmark"
         }
     }
 
@@ -126,7 +127,9 @@ class MovieMain extends React.Component{
                         year:this.state.movie.release_date.slice(0,4)
                     }
                 ).then(()=>{
-                    alert('Added to Bookmark')
+                    this.setState({
+                        b:"Added"
+                    })
                 })
             }
     render(){
@@ -153,7 +156,7 @@ class MovieMain extends React.Component{
                     }
                 </div>
                 <p>{m.release_date.slice(0,4)}</p>
-                <a data-id={m.id} data-name={m.title} style={{cursor:'pointer',color:'white',width:'200px',height:'50px',backgroundColor:'#DB4437',borderRadius:'25px',display:'flex',alignItems:'center',justifyContent:'center'}} onClick={this.add_book}><i style={{width:'30px',textAlign:'center'}}className="material-icons">bookmark</i>Add to Bookmark</a>
+                <a data-id={m.id} data-name={m.title} style={{cursor:'pointer',color:'white',width:'200px',height:'50px',backgroundColor:'#DB4437',borderRadius:'25px',display:'flex',alignItems:'center',justifyContent:'center'}} onClick={this.add_book}><i style={{width:'30px',textAlign:'center'}}className="material-icons">bookmark</i>{this.state.b}</a>
             </div>
         </div>
         <div className='movie-main-right'>
@@ -188,7 +191,7 @@ class Movie extends React.Component{
                     this.setState({
                         movie:data
                     })
-                    localStorage.setItem('genre',data.genres[0].name)
+                    localStorage.setItem('genre',data.genres[0].name!=='undefined'?data.genres[0].name:null)
                 }
             )
         )
