@@ -153,7 +153,7 @@ class MovieMain extends React.Component{
                     }
                 </div>
                 <p>{m.release_date.slice(0,4)}</p>
-                <a data-id={m.id} data-name={m.title} style={{cursor:'pointer',color:'red'}} onClick={this.add_book}>Add to Bookmark</a>
+                <a data-id={m.id} data-name={m.title} style={{cursor:'pointer',color:'white',width:'200px',height:'50px',backgroundColor:'#DB4437',borderRadius:'25px',display:'flex',alignItems:'center',justifyContent:'center'}} onClick={this.add_book}><i style={{width:'30px',textAlign:'center'}}className="material-icons">bookmark</i>Add to Bookmark</a>
             </div>
         </div>
         <div className='movie-main-right'>
