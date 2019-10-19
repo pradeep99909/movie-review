@@ -101,6 +101,9 @@ class Movie extends React.Component{
     getSnapshotBeforeUpdate(prevProps, prevState){
         if (this.props !== prevProps) {
             this.get_movie()
+            this.setState({
+                b:'Add to Bookmark'
+            })
         }
     }
     componentWillMount() {
