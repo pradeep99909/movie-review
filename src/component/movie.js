@@ -15,6 +15,13 @@ class MovieMain extends React.Component{
         }
     }
 
+    getSnapshotBeforeUpdate(prevProps, prevState){
+        if (this.props !== prevProps) {
+            this.setState({
+                b:'Add to Bookmark'
+            })
+        }
+    }
 
             add_book=(e)=>{
                 const id=e.target.dataset['id']
@@ -101,9 +108,6 @@ class Movie extends React.Component{
     getSnapshotBeforeUpdate(prevProps, prevState){
         if (this.props !== prevProps) {
             this.get_movie()
-            this.setState({
-                b:'Add to Bookmark'
-            })
         }
     }
     componentWillMount() {
