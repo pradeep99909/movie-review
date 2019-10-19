@@ -100,8 +100,8 @@ class Home extends React.Component {
           <h1>{this.state.t}</h1>
           <div className="movies_list">
             { this.state.movies !== null
-              ? this.state.movies.map(d => (
-                  <div className='movie-box' data-id={d.id} onClick={this.movie} id={d.key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original'+ d.poster_path+')'}}>
+              ? this.state.movies.map((d,key) => (
+                  <div className='movie-box' data-id={d.id} onClick={this.movie} key={key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original'+ d.poster_path+')'}}>
                     <div className="movie-box-bottom">
                     <h3 data-id={d.id}>{d.title}</h3>
                     <div><p data-id={d.id}>{d.release_date.slice(0,4)}</p>

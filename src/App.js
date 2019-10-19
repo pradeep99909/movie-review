@@ -9,16 +9,15 @@ import Bookmark from "./component/bookmark";
 
 class App extends React.Component {
   render() {
-    // fetch(
-    //   "https://api.themoviedb.org/3/movie/76341?api_key=67da789cca6db17365f6961b7fd6c59d"
-    // ).then(json => json.json().then(data => console.log(data)));
     return (
       <Router history={history}>
         <div className="App">
-          <Route path="/movie/:id" component={Movie} />
-          <Route path="/" component={Login} exact />
-          <Route path="/home" component={Home} exact />
-          <Route path="/bookmark" component={Bookmark} exact />
+          <Switch>
+            <Route path="/movie/:id" component={Movie} exact />
+            <Route path="/" component={Login} exact />
+            <Route path="/home" component={Home} exact />
+            <Route path="/bookmark" component={Bookmark} exact />
+          </Switch>
         </div>
       </Router>
     );

@@ -3,76 +3,7 @@ import Header from './header'
 import $ from 'jquery'
 import { withRouter } from 'react-router-dom'
 import firebase from './config'
-class Genre extends React.Component{
-    constructor(props){
-        super(props)
-        this.state={
-            genre:null
-        }
-    }
-
-    get_genres=()=>{
-        fetch("https://api.themoviedb.org/3/discover/movie?api_key=67da789cca6db17365f6961b7fd6c59d&with_genres="+localStorage.getItem('genre')).
-                        then(
-                            response=>response.json().then(
-                                data=>{
-                                    this.setState(
-                                        {
-                                            genre:data
-                                        }
-                                    )
-
-                                    localStorage.setItem('movie-genres',JSON.stringify(data))
-                                
-                                }
-                                )
-                            
-                        )
-    }
-
-
-    componentWillMount=()=>{
-        this.get_genres()
-    }
-    componentDidMount=()=>{
-        this.get_genres()
-    }
-    componentWillUnmount=()=>{
-        this.get_genres()
-    }
-
-    
-    movie=e=>{
-            this.props.history.go("/movie/"+e.target.dataset['id'])
-    }
-    render(){
-        return (
-            <div className='movie-genres'>
-                    {   
-                        localStorage.getItem('movie-genres')!==null
-                        ?
-                        JSON.parse(localStorage.getItem('movie-genres')).slice(0,4).map((d,key)=>{
-                            return <div className='movie-box' data-id={d.id} onClick={this.movie} id={key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original'+ d.poster_path+')'}}>
-                                <div className="movie-box-bottom">
-                                <h3>{d.title}</h3>
-                                <div><p>{d.release_date.slice(0,4)}</p>
-                                </div>
-                                <div>
-                                <i className="material-icons">star</i>
-                                    <p style={{paddingLeft:'10px'}}>{
-                                    d.vote_average
-                                    }</p>
-                                </div>
-                                </div>
-                            </div>
-                        })
-                        :
-                        null
-                    }
-                </div>
-        )
-    }
-}
+import Genre from './genre'
 class MovieMain extends React.Component{
     constructor(props){
         super(props)
@@ -84,34 +15,6 @@ class MovieMain extends React.Component{
         }
     }
 
-    get_movie=()=>{
-    
-        fetch("https://api.themoviedb.org/3/movie/" +
-        this.props.id +
-        "?api_key=67da789cca6db17365f6961b7fd6c59d&language=en-US").then(
-            response=>response.json().then(
-                data=>{
-                    this.setState({
-                        movie:data,
-                        isLoaded:true
-                    })
-                }
-            )
-        )
-    }
-
-    
-                    
-
-
-    componentWillMount() {
-        this.get_movie()
-    }
-    componentDidMount(){
-        this.get_movie()
-    }
-
-        
 
             add_book=(e)=>{
                 const id=e.target.dataset['id']
@@ -123,8 +26,8 @@ class MovieMain extends React.Component{
                     {
                         id:id,
                         title:name,
-                        image:this.state.movie.poster_path,
-                        year:this.state.movie.release_date.slice(0,4)
+                        image:this.props.movie.poster_path,
+                        year:this.props.movie.release_date.slice(0,4)
                     }
                 ).then(()=>{
                     this.setState({
@@ -133,36 +36,33 @@ class MovieMain extends React.Component{
                 })
             }
     render(){
-        const m=this.state.movie
-        return this.state.isLoaded===true
-        ?
-        <div className='movie-main'>
+        return this.props.movie!==null?<div className='movie-main'>
         <div className='movie-main-left'>
             <div className='movie-left-top'>
-                <img src={"https://image.tmdb.org/t/p/original/"+m.poster_path} />
-                <h2 >{m.title}</h2>
-                <p>{m.production_companies[0].name}</p>
+                <img src={"https://image.tmdb.org/t/p/original/"+this.props.movie.poster_path} />
+                <h2 >{this.props.movie.title}</h2>
+                <p>{this.props.movie.production_companies[0].name}</p>
                 <div style={{display:'flex',alignItems:'center'}} className='rating'>
                 <i className="material-icons" style={{color:'rgb(212, 181, 1)'}}>star</i>
                 <p style={{paddingLeft:'10px'}}>{
-                    m.vote_average
+                    this.props.movie.vote_average
                 }</p>
                 </div>
                 <div className='genre'>
                     {
-                        m.genres.map((d,key)=>{
-                            return <p>{d.name}</p>
+                        this.props.movie.genres.map((d,key)=>{
+                            return <p key={key}>{d.name}</p>
                         })
                     }
                 </div>
-                <p>{m.release_date.slice(0,4)}</p>
-                <a data-id={m.id} data-name={m.title} style={{cursor:'pointer',color:'white',width:'200px',height:'50px',backgroundColor:'#DB4437',borderRadius:'25px',display:'flex',alignItems:'center',justifyContent:'center'}} onClick={this.add_book}><i style={{width:'30px',textAlign:'center'}}className="material-icons">bookmark</i>{this.state.b}</a>
+                <p>{this.props.movie.release_date.slice(0,4)}</p>
+                <a data-id={this.props.movie.id} data-name={this.props.movie.title} style={{cursor:'pointer',color:'white',width:'200px',height:'50px',backgroundColor:'#DB4437',borderRadius:'25px',display:'flex',alignItems:'center',justifyContent:'center'}} onClick={this.add_book}><i style={{width:'30px',textAlign:'center'}}className="material-icons">bookmark</i>{this.state.b}</a>
             </div>
         </div>
         <div className='movie-main-right'>
             <div className='movie-right-top'>
                 <h2>Overview</h2>
-                <p>{m.overview}</p>
+                <p>{this.props.movie.overview}</p>
             </div>
             <div className='movie-right-bottom'>
                 
@@ -191,13 +91,18 @@ class Movie extends React.Component{
                     this.setState({
                         movie:data
                     })
-                    localStorage.setItem('genre',data.genres[0].name!=='undefined'?data.genres[0].name:null)
+                    localStorage.setItem('genre',data.genres[0].id!=='undefined'?data.genres[0].id:null)
                 }
             )
         )
-        console.log(this.state)
     }
 
+    
+    getSnapshotBeforeUpdate(prevProps, prevState){
+        if (this.props !== prevProps) {
+            this.get_movie()
+        }
+    }
     componentWillMount() {
         this.get_movie()
     }
@@ -209,11 +114,12 @@ class Movie extends React.Component{
     }
     render(){
         const movie=this.state.movie
-        console.log(movie)
         return(
             <div className='movie' id='movie' style={{backgroundSize:'cover',background:this.state.movie!==null?"linear-gradient(to right, rgba(0,0,0,0.9) , rgba(0,0,0,.7)) ,url(https://image.tmdb.org/t/p/original"+movie.backdrop_path+")":"linear-gradient(to right, rgba(0,0,0,.9) , rgba(0,0,0,.5))"}}>
                 <Header/>
                 <MovieMain id={this.props.match.params.id} movie={movie} />
+                <h3 style={{color:'white',paddingLeft:'20px'}}>Recommanded</h3>
+                <Genre />
             </div>
         )
     }

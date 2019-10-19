@@ -40,6 +40,7 @@ class Login extends React.Component {
       // The signed-in user info.
       var user = result.user;
       history.push("/home")
+      localStorage.setItem('user_email',firebase.auth().currentUser.email)
       // ...
     }).catch(function(error) {
       // Handle Errors here.

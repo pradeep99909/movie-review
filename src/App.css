@@ -319,6 +319,10 @@
   display: flex;
   flex-wrap: wrap;
 }
+::selection{
+  color:white;
+  background-color: black;
+}
 
 .movie-genres .movie-box{
   width:200px;
