@@ -63,7 +63,7 @@ class Genre extends React.Component{
                     {   
                         this.state.genre!==null
                         ?
-                        this.state.genre.slice(0,8).map((d,key)=>{
+                        this.state.genre.map((d,key)=>{
                             return <div className='movie-box' data-id={d.id} onClick={this.movie} key={key} style={{backgroundSize:'cover',backgroundImage:'linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original'+ d.poster_path+')'}}>
                                     <div className="movie-box-bottom">
                                     <h3 data-id={d.id}>{d.title}</h3>
