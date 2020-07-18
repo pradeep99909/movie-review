@@ -1,15 +1,15 @@
 const Firebase = require("firebase");
 
 var firebaseConfig = {
-  apiKey: "AIzaSyDZsjINu9aerw6itaCwwayaR1C7isSfKXk",
-  authDomain: "proj1-798c4.firebaseapp.com",
-  databaseURL: "https://proj1-798c4.firebaseio.com",
-  projectId: "proj1-798c4",
-  storageBucket: "proj1-798c4.appspot.com",
-  messagingSenderId: "332847525454",
-  appId: "1:332847525454:web:100195b9d746896c"
+  apiKey: "AIzaSyBiCDbKQJey-UxcX3Xo6GjdNzNxdkUXvKs",
+  authDomain: "movie-dd7ae.firebaseapp.com",
+  databaseURL: "https://movie-dd7ae.firebaseio.com",
+  projectId: "movie-dd7ae",
+  storageBucket: "movie-dd7ae.appspot.com",
+  messagingSenderId: "688629438155",
+  appId: "1:688629438155:web:d8b5fdfe7637111a8fed4e",
+  measurementId: "G-W1KB9NVD4E"
 };
-// Initialize Firebase
 if (!Firebase.apps.length) {
   Firebase.initializeApp(firebaseConfig);
 }
