@@ -17,7 +17,9 @@ class Home extends React.Component {
   }
   get_data = () => {
     fetch(
-      "https://api.themoviedb.org/3/discover/movie?api_key=67da789cca6db17365f6961b7fd6c59d&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1"
+      "https://api.themoviedb.org/3/discover/movie?api_key=" +
+        process.env.REACT_APP_API_KEY +
+        "&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1"
     ).then((response) =>
       response.json().then((r) =>
         this.setState({
@@ -52,7 +54,9 @@ class Home extends React.Component {
         url:
           "https://api.themoviedb.org/3/search/movie?query=" +
           this.state.query +
-          "&genre=Adventure&api_key=67da789cca6db17365f6961b7fd6c59d",
+          "&genre=Adventure&api_key=" +
+          process.env.REACT_APP_API_KEY +
+          "",
         success: (response) => {
           //localStorage.setItem("search_list", JSON.stringify(response.results));
           this.setState((prev) => ({

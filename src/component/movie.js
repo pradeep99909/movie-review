@@ -144,7 +144,9 @@ class Movie extends React.Component {
     fetch(
       "https://api.themoviedb.org/3/movie/" +
         this.props.match.params.id +
-        "?api_key=67da789cca6db17365f6961b7fd6c59d&language=en-US"
+        "?api_key=" +
+        process.env.REACT_APP_API_KEY +
+        "&language=en-US"
     ).then((response) =>
       response.json().then((data) => {
         this.setState({

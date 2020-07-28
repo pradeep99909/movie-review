@@ -24,5 +24,6 @@ yarn-error.log*
 
 
 #firebase sdk
+.env
 /src/component/config.js
 .now

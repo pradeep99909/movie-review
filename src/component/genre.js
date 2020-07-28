@@ -1,5 +1,6 @@
 import { withRouter } from "react-router-dom";
 import React from "react";
+import Loader from "./loader";
 
 class Genre extends React.Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Genre extends React.Component {
 
   async get_genres() {
     await fetch(
-      `https://api.themoviedb.org/3/movie/${this.props.id}/similar?api_key=67da789cca6db17365f6961b7fd6c59d&language=en-US&page=1`
+      `https://api.themoviedb.org/3/movie/${this.props.id}/similar?api_key=${process.env.REACT_APP_API_KEY}&language=en-US&page=1`
     ).then((response) =>
       response.json().then((data) => {
         this.setState({
@@ -44,40 +45,42 @@ class Genre extends React.Component {
   render() {
     return (
       <div className="movie-genres">
-        {this.state.genre !== null
-          ? this.state.genre.map((d, key) => {
-              return (
-                <div
-                  className="movie-box"
-                  data-id={d.id}
-                  onClick={this.movie}
-                  key={key}
-                  style={{
-                    backgroundSize: "cover",
-                    backgroundImage:
-                      "linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original" +
-                      d.poster_path +
-                      ")",
-                  }}
-                >
-                  <div className="movie-box-bottom">
-                    <h3 data-id={d.id}>{d.title}</h3>
-                    <div>
-                      <p data-id={d.id}>{d.release_date.slice(0, 4)}</p>
-                    </div>
-                    <div>
-                      <i data-id={d.id} className="material-icons">
-                        star
-                      </i>
-                      <p data-id={d.id} style={{ paddingLeft: "10px" }}>
-                        {d.vote_average}
-                      </p>
-                    </div>
+        {this.state.genre !== null ? (
+          this.state.genre.map((d, key) => {
+            return (
+              <div
+                className="movie-box"
+                data-id={d.id}
+                onClick={this.movie}
+                key={key}
+                style={{
+                  backgroundSize: "cover",
+                  backgroundImage:
+                    "linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original" +
+                    d.poster_path +
+                    ")",
+                }}
+              >
+                <div className="movie-box-bottom">
+                  <h3 data-id={d.id}>{d.title}</h3>
+                  <div>
+                    <p data-id={d.id}>{d.release_date.slice(0, 4)}</p>
+                  </div>
+                  <div>
+                    <i data-id={d.id} className="material-icons">
+                      star
+                    </i>
+                    <p data-id={d.id} style={{ paddingLeft: "10px" }}>
+                      {d.vote_average}
+                    </p>
                   </div>
                 </div>
-              );
-            })
-          : null}
+              </div>
+            );
+          })
+        ) : (
+          <Loader />
+        )}
       </div>
     );
   }
