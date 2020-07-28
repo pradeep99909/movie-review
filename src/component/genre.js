@@ -6,7 +6,7 @@ class Genre extends React.Component {
     super(props);
     this.state = {
       genre: null,
-      load: false
+      load: false,
     };
     this.get_genres = this.get_genres.bind(this);
   }
@@ -17,7 +17,7 @@ class Genre extends React.Component {
     ).then((response) =>
       response.json().then((data) => {
         this.setState({
-          genre: data.results
+          genre: data.results,
         });
       })
     );
@@ -33,9 +33,9 @@ class Genre extends React.Component {
   componentWillMount = () => {
     this.get_genres();
   };
-  componentDidUpdate() {
-    this.get_genres();
-  }
+  // componentDidUpdate() {
+  //   this.get_genres();
+  // }
 
   movie = (e) => {
     this.props.history.push("/movie/" + e.target.dataset["id"]);
@@ -57,7 +57,7 @@ class Genre extends React.Component {
                     backgroundImage:
                       "linear-gradient(to top, rgba(0,0,0,0.9) 5%, rgba(0,0,0,0)),url(https://image.tmdb.org/t/p/original" +
                       d.poster_path +
-                      ")"
+                      ")",
                   }}
                 >
                   <div className="movie-box-bottom">

@@ -8,6 +8,7 @@ import Review from "./review";
 
 import OverviewBox from "./overviewbox";
 import CastBox from "./castbox";
+import Loader from "./loader";
 require("dotenv").config();
 class MovieMain extends React.Component {
   constructor(props) {
@@ -16,14 +17,14 @@ class MovieMain extends React.Component {
       movie: null,
       isLoaded: false,
       genres: null,
-      b: "Add to Bookmark"
+      b: "Add to Bookmark",
     };
   }
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
     if (this.props !== prevProps) {
       this.setState({
-        b: "Add to Bookmark"
+        b: "Add to Bookmark",
       });
     }
   }
@@ -42,11 +43,11 @@ class MovieMain extends React.Component {
         id: id,
         title: name,
         image: this.props.movie.poster_path,
-        year: this.props.movie.release_date.slice(0, 4)
+        year: this.props.movie.release_date.slice(0, 4),
       })
       .then(() => {
         this.setState({
-          b: "Added"
+          b: "Added",
         });
       });
   };
@@ -99,7 +100,7 @@ class MovieMain extends React.Component {
                 borderRadius: "25px",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center"
+                justifyContent: "center",
               }}
               onClick={this.add_book}
             >
@@ -119,13 +120,15 @@ class MovieMain extends React.Component {
             <CastBox id={this.props.id} />
           </div>
           <div className="movie-right-bottom">
-            <h3 style={{ color: "white", paddingLeft: "20px" }}>Recommanded</h3>
+            <h3 style={{ color: "white" }}>Recommanded</h3>
             <Genre id={this.props.id} />
             <Review />
           </div>
         </div>
       </div>
-    ) : null;
+    ) : (
+      <Loader />
+    );
   }
 }
 
@@ -133,7 +136,7 @@ class Movie extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      movie: null
+      movie: null,
     };
   }
 
@@ -145,7 +148,7 @@ class Movie extends React.Component {
     ).then((response) =>
       response.json().then((data) => {
         this.setState({
-          movie: data
+          movie: data,
         });
         localStorage.setItem(
           "genre",
@@ -155,7 +158,7 @@ class Movie extends React.Component {
     );
   };
 
-  getSnapshotBeforeUpdate(prevProps, prevState) {
+  componentWillReceiveProps(prevProps, prevState) {
     if (this.props !== prevProps) {
       this.get_movie();
     }
@@ -163,12 +166,12 @@ class Movie extends React.Component {
   componentWillMount() {
     this.get_movie();
   }
-  componentDidMount() {
-    this.get_movie();
-  }
-  componentWillUnmount() {
-    this.get_movie();
-  }
+  // componentDidMount(prevProps, prevState) {
+  //   if (this.props !== prevProps) {
+  //     this.get_movie();
+  //   }
+  // }
+
   render() {
     const movie = this.state.movie;
     return (
@@ -182,7 +185,7 @@ class Movie extends React.Component {
               ? "linear-gradient(to right, rgba(0,0,0,0.9) , rgba(0,0,0,.7)) ,url(https://image.tmdb.org/t/p/original" +
                 movie.backdrop_path +
                 ")"
-              : "linear-gradient(to right, rgba(0,0,0,.9) , rgba(0,0,0,.5))"
+              : "linear-gradient(to right, rgba(0,0,0,.9) , rgba(0,0,0,.5))",
         }}
       >
         <Header />

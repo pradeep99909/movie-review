@@ -5,14 +5,14 @@ class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "user123@gmail.com",
-      password: "123456789"
+      email: "",
+      password: "",
     };
   }
 
   handlechange = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
   login = (e) => {
@@ -20,11 +20,12 @@ class LoginForm extends React.Component {
     if (this.state.email !== "" && this.state.password !== "") {
       firebase
         .auth()
-        .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-          return firebase
-            .auth()
-            .signInWithEmailAndPassword(this.state.email, this.state.password);
+        .signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then((user) => {
+          localStorage.setItem("movie-logined", true);
+          localStorage.setItem("movie-user-id", user.user.uid);
+          localStorage.setItem("movie-user-name", user.user.displayName);
+          this.props.history.push("/home");
         })
         .catch((error) => {
           alert(error.message);
@@ -32,26 +33,13 @@ class LoginForm extends React.Component {
     }
   };
 
-  auth_redirect = () => {
-    if (firebase.auth().currentUser) {
-      this.props.history.push("/home");
-    }
-  };
-  componentWillMount() {
-    this.auth_redirect();
-  }
-
-  componentDidUpdate() {
-    this.auth_redirect();
-  }
-
   google = () => {
     const { history } = this.props;
     var provider = new firebase.auth.GoogleAuthProvider();
     firebase
       .auth()
       .signInWithPopup(provider)
-      .then(function(result) {
+      .then(function (result) {
         // This gives you a Google Access Token. You can use it to access the Google API.
         var token = result.credential.accessToken;
         // The signed-in user info.
@@ -60,7 +48,7 @@ class LoginForm extends React.Component {
         localStorage.setItem("user_email", firebase.auth().currentUser.email);
         // ...
       })
-      .catch(function(error) {
+      .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
@@ -73,7 +61,7 @@ class LoginForm extends React.Component {
     firebase
       .auth()
       .getRedirectResult()
-      .then(function(result) {
+      .then(function (result) {
         if (result.credential) {
           // This gives you a Google Access Token. You can use it to access the Google API.
           var token = result.credential.accessToken;
@@ -82,7 +70,7 @@ class LoginForm extends React.Component {
         // The signed-in user info.
         var user = result.user;
       })
-      .catch(function(error) {
+      .catch(function (error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;

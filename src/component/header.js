@@ -6,21 +6,22 @@ class Header extends React.Component {
     super(props);
     this.state = {
       display: "none",
-      user: null
+      user: null,
     };
   }
   componentWillMount() {
-    if (!firebase.auth().currentUser) {
+    if (!localStorage.getItem("movie-logined")) {
       this.props.history.push("/login");
     } else {
       this.setState((prev) => ({
-        user: firebase.auth().currentUser.displayName
+        user: localStorage.getItem("movie-user-name"),
       }));
     }
   }
   home = () => {
-    if (!firebase.auth().currentUser) {
+    if (!localStorage.getItem("movie-logined")) {
       this.props.history.push("/login");
+      localStorage.clear();
     } else {
       this.props.history.push("/home");
     }
@@ -28,10 +29,10 @@ class Header extends React.Component {
   open = (e) => {
     this.state.display === "none"
       ? this.setState({
-          display: "block"
+          display: "block",
         })
       : this.setState({
-          display: "none"
+          display: "none",
         });
   };
   profile = () => {

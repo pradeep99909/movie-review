@@ -3,6 +3,7 @@ import Header from "./header";
 import $ from "jquery";
 import { withRouter } from "react-router-dom";
 import MovieBox from "./movie-box";
+import Loader from "./loader";
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -11,7 +12,7 @@ class Home extends React.Component {
       search_list: null,
       movies: null,
       genres: "",
-      t: "Discover Movies"
+      t: "Discover Movies",
     };
   }
   get_data = () => {
@@ -20,7 +21,7 @@ class Home extends React.Component {
     ).then((response) =>
       response.json().then((r) =>
         this.setState({
-          movies: r.results
+          movies: r.results,
         })
       )
     );
@@ -29,19 +30,19 @@ class Home extends React.Component {
   componentWillMount() {
     this.get_data();
   }
-  componentDidMount() {
-    this.get_data();
-  }
-  componentWillUnmount() {
-    this.get_data();
-  }
+  // componentDidMount() {
+  //   this.get_data();
+  // }
+  // componentWillUnmount() {
+  //   this.get_data();
+  // }
 
   searchchange = (e) => {
     const { value, name } = e.target;
     this.setState((prev) => ({
       ...prev,
       [name]: value,
-      t: 'Search "' + value + '"'
+      t: 'Search "' + value + '"',
     }));
     if (this.state.query !== "") {
       $.ajax({
@@ -56,12 +57,12 @@ class Home extends React.Component {
           //localStorage.setItem("search_list", JSON.stringify(response.results));
           this.setState((prev) => ({
             ...prev,
-            movies: response.results
+            movies: response.results,
           }));
         },
-        error: function(error) {
+        error: function (error) {
           console.log(error);
-        }
+        },
       });
       console.log(JSON.parse(localStorage.getItem("search_list")));
     } else {
@@ -69,7 +70,7 @@ class Home extends React.Component {
       this.setState((prev) => ({
         ...prev,
         search_list: null,
-        t: "Discover Movies"
+        t: "Discover Movies",
       }));
     }
   };
@@ -90,8 +91,23 @@ class Home extends React.Component {
         <div className="movies">
           <h1>{this.state.t}</h1>
           <div className="movies_list">
-            {this.state.movies !== null
-              ? this.state.movies.map((d, key) => (
+            {this.state.movies !== null ? (
+              this.state.movies.map((d, key) => (
+                <MovieBox
+                  props={this.props}
+                  data-id={d.id}
+                  id={d.id}
+                  title={d.title}
+                  vote_average={d.vote_average}
+                  release_date={d.release_date}
+                  poster_path={d.poster_path}
+                  key={key}
+                />
+              ))
+            ) : this.state.search_list !== null ? (
+              this.state.search_list
+                .slice(0, 11)
+                .map((d, key) => (
                   <MovieBox
                     props={this.props}
                     data-id={d.id}
@@ -103,22 +119,9 @@ class Home extends React.Component {
                     key={key}
                   />
                 ))
-              : this.state.search_list !== null
-              ? this.state.search_list
-                  .slice(0, 11)
-                  .map((d, key) => (
-                    <MovieBox
-                      props={this.props}
-                      data-id={d.id}
-                      id={d.id}
-                      title={d.title}
-                      vote_average={d.vote_average}
-                      release_date={d.release_date}
-                      poster_path={d.poster_path}
-                      key={key}
-                    />
-                  ))
-              : null}
+            ) : (
+              <Loader />
+            )}
           </div>
         </div>
       </div>

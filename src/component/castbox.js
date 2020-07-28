@@ -1,11 +1,12 @@
 import React from "react";
 import Cast from "./cast";
+import Loader from "./loader";
 
 class CastBox extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      casts: null
+      casts: null,
     };
   }
   get_cast = () => {
@@ -23,23 +24,22 @@ class CastBox extends React.Component {
   componentWillMount() {
     this.get_cast();
   }
-  componentDidUpdate() {
-    this.get_cast();
-  }
   render() {
     return (
       <div className="castbox">
         <h3 style={{ color: "white", paddingTop: "10px" }}>Casts</h3>
         <div className="casts">
-          {this.state.casts !== null
-            ? this.state.casts.map((d, key) => (
-                <Cast
-                  actor_image={d.profile_path}
-                  actor={d.name}
-                  character={d.character}
-                />
-              ))
-            : null}
+          {this.state.casts !== null ? (
+            this.state.casts.map((d, key) => (
+              <Cast
+                actor_image={d.profile_path}
+                actor={d.name}
+                character={d.character}
+              />
+            ))
+          ) : (
+            <Loader />
+          )}
         </div>
       </div>
     );

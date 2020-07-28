@@ -25,3 +25,4 @@ yarn-error.log*
 
 #firebase sdk
 /src/component/config.js
+.now
